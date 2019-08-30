@@ -1,5 +1,6 @@
 from api.audio_features import get_audio_features
 from api.credentials import get_credentials
+from api.tracks_of_album import get_tracks_of_album
 from colorama import init as colorama_init
 from colorama import Back, Fore, Style
 from utils.better_pprint import pprint
@@ -10,6 +11,7 @@ import sys
 colorama_init()
 print()
 
+sys.argv.pop(0)
 sys.argv.pop(0)
 print(Fore.GREEN + "    Data:" + Style.RESET_ALL)
 i = 1
@@ -48,17 +50,47 @@ print()
 
 credentials = get_credentials(client_id, client_secret)
 
-features = {}
+output = {}
 
+albums_count = 0
+tracks_count = 0
 for row in csv.reader(sys.argv, delimiter=","):
-    features[row[0]] = get_audio_features(row[0], credentials, abort_on_error=False)
+    albums_count += 1
+
+    output[row[2]] = {}
+    output[row[2]]["album_name"] = row[0]
+    output[row[2]]["artist"] = row[1]
+    output[row[2]]["tracks"] = {}
+    output[row[2]]["credit"] = row[3]
+    output[row[2]]["anthony_score"] = row[4]
+
+    tracks = get_tracks_of_album(
+        row[2].split(":")[2], credentials, abort_on_error=False
+    )
+    if "error" not in tracks:
+        print(
+            Fore.GREEN
+            + "     → Got tracks! {} tracks present.".format(len(tracks))
+            + Style.RESET_ALL
+        )
+        tracks_count += len(tracks)
+        i = 0
+        for track in tracks:
+            i += 1
+            output[row[2]]["tracks"][track["uri"]] = get_audio_features(
+                track["uri"].split(":")[2], credentials, abort_on_error=False, index=i
+            )
 
 print()
 print()
-pprint(features)
+print(
+    Fore.GREEN
+    + "     ☮ {0} tracks found! {1} albums searched! ☮".format(
+        tracks_count, albums_count
+    )
+    + Style.RESET_ALL
+)
+print()
 
-print()
-print()
-print(Fore.GREEN + "    Generated JSON: " + Style.RESET_ALL)
-print(json.dumps(features))
-print()
+with open("output.json", "w") as file:
+    json.dump(output, file)

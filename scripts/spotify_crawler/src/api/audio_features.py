@@ -6,11 +6,16 @@ import requests
 import sys
 
 
-def get_audio_features(track_id, credentials, abort_on_error=True):
+def get_audio_features(
+    track_id, credentials, abort_on_error=True, global_ident=6, index=1
+):
     with yaspin(
         side="right",
         text=Fore.YELLOW
-        + "    GET https://api.spotify.com/v1/audio-features/{}".format(track_id)
+        + " " * global_ident
+        + "[{}] GET https://api.spotify.com/v1/audio-features/{}".format(
+            index, track_id
+        )
         + Style.RESET_ALL,
         color="yellow",
     ) as spinner:
@@ -21,8 +26,9 @@ def get_audio_features(track_id, credentials, abort_on_error=True):
         if res.ok:
             spinner.text = (
                 Fore.GREEN
-                + "    GET https://api.spotify.com/v1/audio-features/{}".format(
-                    track_id
+                + " " * global_ident
+                + "[{}] GET https://api.spotify.com/v1/audio-features/{}".format(
+                    index, track_id
                 )
                 + Style.RESET_ALL
             )
@@ -32,8 +38,9 @@ def get_audio_features(track_id, credentials, abort_on_error=True):
         else:
             spinner.text = (
                 Fore.RED
-                + "    GET https://api.spotify.com/v1/audio-features/{}".format(
-                    track_id
+                + " " * global_ident
+                + "[{}] GET https://api.spotify.com/v1/audio-features/{}".format(
+                    index, track_id
                 )
                 + Style.RESET_ALL
             )
@@ -43,7 +50,8 @@ def get_audio_features(track_id, credentials, abort_on_error=True):
             print()
             print(
                 Fore.RED
-                + "     [{0}] {1}".format(res.status_code, res.reason)
+                + +" " * global_ident
+                + " [{0}] {1}".format(res.status_code, res.reason)
                 + Style.RESET_ALL
             )
             pprint(res.json(), color=Fore.RED)
