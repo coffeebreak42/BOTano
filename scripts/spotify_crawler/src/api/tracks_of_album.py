@@ -23,6 +23,7 @@ def get_tracks_of_album(
         res = requests_retry_session().get(
             href,
             headers={"Authorization": "Bearer {}".format(credentials["access_token"])},
+            timeout=60,
         )
         ret = res.json()
         if res.ok:

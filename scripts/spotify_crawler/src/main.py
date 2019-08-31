@@ -64,6 +64,14 @@ for row in csv.reader(sys.argv, delimiter=","):
     output[row[2]]["credit"] = row[3]
     output[row[2]]["anthony_score"] = row[4]
 
+    print()
+    print(
+        Fore.GREEN
+        + "    [{}/{}] Album: {} by {}.".format(
+            albums_count, len(sys.argv), row[0], row[1]
+        )
+        + Style.RESET_ALL
+    )
     tracks = get_tracks_of_album(
         row[2].split(":")[2], credentials, abort_on_error=False
     )

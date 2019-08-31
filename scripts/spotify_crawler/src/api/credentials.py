@@ -16,6 +16,7 @@ def get_credentials(client_id, client_secret):
             "https://accounts.spotify.com/api/token",
             auth=(client_id, client_secret),
             data={"grant_type": "client_credentials"},
+            timeout=60,
         )
         if res.ok:
             spinner.text = (

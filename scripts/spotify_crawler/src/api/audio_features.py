@@ -21,6 +21,7 @@ def get_audio_features(
         res = requests_retry_session().get(
             "https://api.spotify.com/v1/audio-features/{}".format(track_id),
             headers={"Authorization": "Bearer {}".format(credentials["access_token"])},
+            timeout=60,
         )
         if res.ok:
             spinner.text = (
