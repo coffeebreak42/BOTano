@@ -50,7 +50,7 @@ def get_audio_features(
             print()
             print(
                 Fore.RED
-                + +" " * global_ident
+                + " " * global_ident
                 + " [{0}] {1}".format(res.status_code, res.reason)
                 + Style.RESET_ALL
             )
