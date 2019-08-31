@@ -1,10 +1,8 @@
 from colorama import Back, Fore, Style
-from yaspin import yaspin
 from pprint import pprint
+from utils.better_requests import requests_retry_session
+from yaspin import yaspin
 import sys
-import requests
-import sys
-
 
 def get_credentials(client_id, client_secret):
     with yaspin(
@@ -14,7 +12,7 @@ def get_credentials(client_id, client_secret):
         + Style.RESET_ALL,
         color="yellow",
     ) as spinner:
-        res = requests.post(
+        res = requests_retry_session().post(
             "https://accounts.spotify.com/api/token",
             auth=(client_id, client_secret),
             data={"grant_type": "client_credentials"},

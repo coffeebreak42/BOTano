@@ -1,8 +1,7 @@
 from colorama import Back, Fore, Style
-from yaspin import yaspin
 from utils.better_pprint import pprint
-import sys
-import requests
+from utils.better_requests import requests_retry_session
+from yaspin import yaspin
 import sys
 
 
@@ -21,7 +20,7 @@ def get_tracks_of_album(
         text=Fore.YELLOW + " " * global_ident + print_output + Style.RESET_ALL,
         color="yellow",
     ) as spinner:
-        res = requests.get(
+        res = requests_retry_session().get(
             href,
             headers={"Authorization": "Bearer {}".format(credentials["access_token"])},
         )

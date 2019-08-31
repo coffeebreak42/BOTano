@@ -1,8 +1,7 @@
 from colorama import Back, Fore, Style
-from yaspin import yaspin
 from utils.better_pprint import pprint
-import sys
-import requests
+from utils.better_requests import requests_retry_session
+from yaspin import yaspin
 import sys
 
 
@@ -19,7 +18,7 @@ def get_audio_features(
         + Style.RESET_ALL,
         color="yellow",
     ) as spinner:
-        res = requests.get(
+        res = requests_retry_session().get(
             "https://api.spotify.com/v1/audio-features/{}".format(track_id),
             headers={"Authorization": "Bearer {}".format(credentials["access_token"])},
         )
